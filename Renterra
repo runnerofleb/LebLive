@@ -1,1 +1,1632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Renterra BDR ICP Briefing — Chris Khoury</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
 
+  @page {
+    size: Letter;
+    margin: 0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0B1410;
+    --bg-2: #0F1A15;
+    --panel: #13201A;
+    --panel-2: #182821;
+    --line: #1F3128;
+    --line-2: #2A4338;
+    --text: #E6EFE9;
+    --text-dim: #9FB4A8;
+    --text-faint: #6B8378;
+    --accent: #4ADE80;
+    --accent-2: #22C55E;
+    --accent-soft: rgba(74, 222, 128, 0.12);
+    --warn: #FBBF24;
+    --danger: #F87171;
+  }
+
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 10.5pt;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    width: 8.5in;
+    height: 11in;
+    padding: 0.55in 0.6in;
+    page-break-after: always;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+  }
+  .page:last-child { page-break-after: auto; }
+
+  /* page header & footer */
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8pt;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 0.35in;
+  }
+  .page-header .right { color: var(--text-faint); }
+
+  .page-footer {
+    position: absolute;
+    bottom: 0.35in;
+    left: 0.6in;
+    right: 0.6in;
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7.5pt;
+    color: var(--text-faint);
+    border-top: 1px solid var(--line);
+    padding-top: 0.12in;
+    letter-spacing: 0.08em;
+  }
+
+  /* type system */
+  h1, h2, h3, h4 { font-family: 'Fraunces', serif; font-weight: 700; letter-spacing: -0.02em; }
+  .display {
+    font-family: 'Fraunces', serif;
+    font-weight: 900;
+    font-size: 64pt;
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    color: var(--text);
+  }
+  h1 { font-size: 28pt; line-height: 1.05; color: var(--text); }
+  h2 { font-size: 18pt; line-height: 1.15; color: var(--text); margin-bottom: 0.08in; }
+  h3 { font-size: 13pt; color: var(--text); margin-bottom: 0.06in; }
+  h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8pt;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.05in;
+  }
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8pt;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.1in;
+  }
+  p { margin-bottom: 0.08in; }
+  .lead { font-size: 11.5pt; color: var(--text-dim); line-height: 1.6; }
+
+  /* ============ COVER ============ */
+  .cover {
+    background:
+      radial-gradient(circle at 80% 15%, rgba(74,222,128,0.10), transparent 45%),
+      radial-gradient(circle at 10% 90%, rgba(34,197,94,0.06), transparent 50%),
+      var(--bg);
+    padding: 0.7in 0.7in 0.4in;
+    display: flex;
+    flex-direction: column;
+  }
+  .cover-byline {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9pt;
+    letter-spacing: 0.22em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    text-align: right;
+  }
+  .cover-eyebrow {
+    margin-top: 0.65in;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5pt;
+    letter-spacing: 0.24em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+  .cover-title {
+    margin-top: 0.18in;
+    font-family: 'Fraunces', serif;
+    font-weight: 900;
+    font-size: 78pt;
+    line-height: 0.92;
+    letter-spacing: -0.045em;
+    color: var(--text);
+  }
+  .cover-title em {
+    font-style: italic;
+    color: var(--accent);
+    font-weight: 400;
+  }
+  .cover-sub {
+    margin-top: 0.3in;
+    max-width: 5.4in;
+    font-size: 13pt;
+    line-height: 1.5;
+    color: var(--text-dim);
+  }
+  .cover-tags {
+    margin-top: 0.35in;
+    display: flex;
+    gap: 0.1in;
+    flex-wrap: wrap;
+  }
+  .tag {
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    padding: 0.05in 0.16in;
+    border-radius: 100px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8.5pt;
+    letter-spacing: 0.06em;
+  }
+  .cover-callouts {
+    margin-top: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.2in;
+  }
+  .callout {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 0.22in;
+  }
+  .callout h4 { margin-bottom: 0.08in; }
+  .callout .big { font-family: 'Fraunces', serif; font-size: 18pt; font-weight: 700; color: var(--text); line-height: 1.1; margin-bottom: 0.06in; }
+  .callout .body { font-size: 9.5pt; color: var(--text-dim); line-height: 1.5; }
+
+  .cover-watermark {
+    position: absolute;
+    bottom: 0.5in;
+    right: -0.15in;
+    font-family: 'Fraunces', serif;
+    font-size: 180pt;
+    font-weight: 900;
+    color: rgba(74,222,128,0.04);
+    line-height: 0.8;
+    letter-spacing: -0.05em;
+    pointer-events: none;
+  }
+
+  /* ============ GENERAL COMPONENTS ============ */
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.18in;
+    margin-top: 0.2in;
+    margin-bottom: 0.25in;
+  }
+  .stat {
+    border: 1px solid var(--line);
+    background: var(--panel);
+    border-radius: 10px;
+    padding: 0.18in;
+  }
+  .stat .num {
+    font-family: 'Fraunces', serif;
+    font-size: 32pt;
+    font-weight: 900;
+    color: var(--accent);
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+  .stat .label {
+    margin-top: 0.06in;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7.5pt;
+    letter-spacing: 0.12em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 0.22in 0.24in;
+    margin-bottom: 0.18in;
+  }
+  .panel-accent {
+    background: linear-gradient(135deg, rgba(74,222,128,0.06), rgba(74,222,128,0.02));
+    border: 1px solid var(--line-2);
+  }
+
+  ul.checklist {
+    list-style: none;
+    padding: 0;
+  }
+  ul.checklist li {
+    padding-left: 0.22in;
+    position: relative;
+    margin-bottom: 0.07in;
+    font-size: 10pt;
+    line-height: 1.5;
+    color: var(--text-dim);
+  }
+  ul.checklist li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  ul.checklist li strong { color: var(--text); }
+
+  /* ============ ICP TABLE ============ */
+  table.icp {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 0.1in;
+    font-size: 9.5pt;
+  }
+  table.icp th, table.icp td {
+    text-align: left;
+    padding: 0.1in 0.12in;
+    border-bottom: 1px solid var(--line);
+  }
+  table.icp th {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7.5pt;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    font-weight: 600;
+    padding-bottom: 0.06in;
+  }
+  table.icp td.account { font-weight: 600; color: var(--text); }
+  table.icp td.score {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 11pt;
+  }
+  table.icp td.priority { color: var(--text); font-size: 9pt; }
+  table.icp td.why { color: var(--text-dim); font-size: 9pt; }
+
+  /* ============ ACCOUNT PAGES ============ */
+  .account-header {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 0.25in;
+    align-items: start;
+    padding-bottom: 0.18in;
+    margin-bottom: 0.2in;
+    border-bottom: 1px solid var(--line);
+  }
+  .account-num {
+    font-family: 'Fraunces', serif;
+    font-weight: 900;
+    font-size: 56pt;
+    line-height: 0.9;
+    color: var(--accent);
+    letter-spacing: -0.04em;
+  }
+  .account-title-block .priority-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8pt;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.04in;
+  }
+  .account-title-block h2 {
+    font-size: 22pt;
+    margin-bottom: 0.04in;
+    line-height: 1.05;
+  }
+  .account-title-block .desc {
+    font-size: 9.5pt;
+    color: var(--text-dim);
+    line-height: 1.4;
+  }
+  .score-circle {
+    text-align: center;
+    border: 2px solid var(--accent);
+    background: var(--accent-soft);
+    border-radius: 50%;
+    width: 0.85in;
+    height: 0.85in;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .score-circle .v {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 20pt;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .score-circle .l {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 6.5pt;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-top: 0.02in;
+  }
+
+  .pov-banner {
+    background: var(--panel-accent, var(--accent-soft));
+    border-left: 3px solid var(--accent);
+    padding: 0.14in 0.18in;
+    margin-bottom: 0.2in;
+    font-size: 10pt;
+    color: var(--text);
+    line-height: 1.5;
+    font-style: italic;
+    border-radius: 0 8px 8px 0;
+  }
+  .pov-banner strong {
+    font-style: normal;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7.5pt;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 0.04in;
+  }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.2in;
+    margin-bottom: 0.18in;
+  }
+  .three-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.18in;
+  }
+
+  /* snapshot table */
+  table.snapshot {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9pt;
+  }
+  table.snapshot td {
+    padding: 0.07in 0;
+    vertical-align: top;
+    border-bottom: 1px dashed var(--line);
+  }
+  table.snapshot td.label {
+    width: 1.1in;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7.5pt;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    padding-right: 0.1in;
+    padding-top: 0.09in;
+  }
+  table.snapshot td.val { color: var(--text-dim); line-height: 1.45; }
+  table.snapshot td.val strong { color: var(--text); font-weight: 600; }
+  table.snapshot tr:last-child td { border-bottom: none; }
+
+  /* discovery list */
+  ul.discovery {
+    list-style: none;
+    padding: 0;
+    counter-reset: dq;
+  }
+  ul.discovery li {
+    counter-increment: dq;
+    padding-left: 0.3in;
+    position: relative;
+    margin-bottom: 0.09in;
+    font-size: 9.5pt;
+    line-height: 1.45;
+    color: var(--text-dim);
+    font-style: italic;
+  }
+  ul.discovery li::before {
+    content: "Q" counter(dq);
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7.5pt;
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    font-style: normal;
+  }
+
+  /* value map chips */
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.06in;
+    margin-top: 0.05in;
+  }
+  .chip {
+    background: var(--accent-soft);
+    border: 1px solid rgba(74,222,128,0.3);
+    color: var(--text);
+    padding: 0.04in 0.12in;
+    border-radius: 6px;
+    font-size: 8.5pt;
+    line-height: 1.3;
+  }
+
+  /* opening wedge box */
+  .wedge {
+    background: var(--bg-2);
+    border: 1px dashed var(--accent);
+    border-radius: 10px;
+    padding: 0.18in 0.2in;
+    margin-top: 0.15in;
+    position: relative;
+  }
+  .wedge .lab {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7.5pt;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.06in;
+  }
+  .wedge .quote {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 11pt;
+    line-height: 1.5;
+    color: var(--text);
+  }
+  .wedge .quote::before {
+    content: "\201C";
+    font-size: 22pt;
+    color: var(--accent);
+    line-height: 0;
+    vertical-align: -0.06in;
+    margin-right: 0.04in;
+  }
+  .wedge .quote::after {
+    content: "\201D";
+    font-size: 22pt;
+    color: var(--accent);
+    line-height: 0;
+    vertical-align: -0.06in;
+    margin-left: 0.04in;
+  }
+
+  /* ============ COMPETITOR TABLE ============ */
+  table.competitors {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 9pt;
+    margin-top: 0.1in;
+  }
+  table.competitors th, table.competitors td {
+    text-align: left;
+    padding: 0.09in 0.12in;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  table.competitors th {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7.5pt;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    font-weight: 600;
+  }
+  table.competitors td.what { font-weight: 600; color: var(--text); }
+  table.competitors td.tier { color: var(--text-dim); }
+  table.competitors td.wedge-col { color: var(--accent); font-style: italic; font-size: 8.5pt; }
+
+  /* ============ OBJECTIONS ============ */
+  .obj {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 0.15in 0.18in;
+    margin-bottom: 0.12in;
+    page-break-inside: avoid;
+  }
+  .obj .question {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7.5pt;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--danger);
+    margin-bottom: 0.05in;
+  }
+  .obj .said {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 10.5pt;
+    color: var(--text);
+    margin-bottom: 0.08in;
+    line-height: 1.4;
+  }
+  .obj .response-lab {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7.5pt;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.05in;
+  }
+  .obj .response {
+    font-size: 9.5pt;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+
+  /* ============ EXECUTION PLAN ============ */
+  .flow-step {
+    display: grid;
+    grid-template-columns: 0.4in 1fr;
+    gap: 0.1in;
+    margin-bottom: 0.12in;
+    align-items: start;
+  }
+  .flow-num {
+    font-family: 'Fraunces', serif;
+    font-weight: 900;
+    font-size: 20pt;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .flow-content h4 {
+    color: var(--text);
+    text-transform: none;
+    letter-spacing: 0;
+    font-family: 'Fraunces', serif;
+    font-size: 11pt;
+    margin-bottom: 0.03in;
+  }
+  .flow-content p {
+    font-size: 9.5pt;
+    color: var(--text-dim);
+    line-height: 1.45;
+    margin: 0;
+  }
+
+  /* ============ MAPPING TABLE ============ */
+  table.map {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 9pt;
+  }
+  table.map th, table.map td {
+    padding: 0.09in 0.12in;
+    text-align: left;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  table.map th {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7.5pt;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+  table.map td.trigger {
+    font-style: italic;
+    color: var(--text);
+    width: 48%;
+  }
+  table.map td.anchor {
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  /* ============ DO/DON'T ============ */
+  .do-dont {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.18in;
+    margin-bottom: 0.18in;
+  }
+  .do-dont .col {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 0.18in 0.2in;
+  }
+  .do-dont h4 { margin-bottom: 0.1in; }
+  .do-dont .col.do h4 { color: var(--accent); }
+  .do-dont .col.dont h4 { color: var(--danger); }
+  .do-dont ul { list-style: none; padding: 0; }
+  .do-dont li {
+    padding-left: 0.2in;
+    position: relative;
+    margin-bottom: 0.07in;
+    font-size: 9.5pt;
+    line-height: 1.45;
+    color: var(--text-dim);
+  }
+  .do-dont .col.do li::before {
+    content: "+";
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .do-dont .col.dont li::before {
+    content: "×";
+    position: absolute;
+    left: 0;
+    color: var(--danger);
+    font-weight: 700;
+  }
+
+  /* misc */
+  .divider {
+    border-top: 1px solid var(--line);
+    margin: 0.2in 0;
+  }
+  .small-mono {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7.5pt;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+  .sources-list {
+    list-style: none;
+    padding: 0;
+    font-size: 9pt;
+    color: var(--text-dim);
+    line-height: 1.55;
+  }
+  .sources-list li {
+    padding: 0.07in 0;
+    border-bottom: 1px dashed var(--line);
+  }
+  .sources-list li strong { color: var(--text); }
+</style>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- PAGE 1 — COVER -->
+<!-- ============================================================ -->
+<div class="page cover">
+  <div class="cover-watermark">ICP</div>
+  <div class="cover-byline">Chris Khoury</div>
+
+  <div class="cover-eyebrow">Renterra BDR Mock Exercise · v2</div>
+  <div class="cover-title">ICP Research<br><em>&amp; Call Playbook</em></div>
+
+  <div class="cover-sub">
+    Four Massachusetts &amp; New England equipment rental accounts with clear operational complexity,
+    credible buying triggers, and a complete cold-call framework — discovery, objections,
+    competitor positioning, and execution plan.
+  </div>
+
+  <div class="cover-tags">
+    <span class="tag">Equipment-first</span>
+    <span class="tag">Independent / regional</span>
+    <span class="tag">Operational complexity</span>
+    <span class="tag">BDR-ready</span>
+  </div>
+
+  <div class="cover-callouts">
+    <div class="callout">
+      <h4>Research Thesis</h4>
+      <div class="body">
+        Renterra wins where the bottleneck is not demand — it is execution: fast quotes,
+        clean inventory status, dispatch coordination, service readiness, inspection records,
+        payments, and follow-up discipline.
+      </div>
+    </div>
+    <div class="callout">
+      <h4>Mock-Call Target</h4>
+      <div class="big">Hillview Equipment</div>
+      <div class="body">
+        Highest concentration of heavy-equipment signals: contractor-only rentals, transport,
+        service &amp; parts, large inventory, high-value machines.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE 2 — EXECUTIVE SUMMARY -->
+<!-- ============================================================ -->
+<div class="page">
+  <div class="page-header">
+    <span>§ 01 — Executive Summary</span>
+    <span class="right">Renterra BDR · Chris Khoury</span>
+  </div>
+
+  <div class="eyebrow">Methodology</div>
+  <h1>How I filtered for Renterra-fit accounts.</h1>
+
+  <div class="stat-grid">
+    <div class="stat">
+      <div class="num">4</div>
+      <div class="label">High-fit accounts</div>
+    </div>
+    <div class="stat">
+      <div class="num">90+</div>
+      <div class="label">ICP score each</div>
+    </div>
+    <div class="stat">
+      <div class="num">1</div>
+      <div class="label">Primary target</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <h4>Core ICP Signals</h4>
+      <ul class="checklist">
+        <li>Construction or heavy-equipment rental as a <strong>core line of business</strong></li>
+        <li>Real <strong>delivery, pickup, and transport</strong> coordination</li>
+        <li>High-value assets requiring <strong>inspection, service, and utilization visibility</strong></li>
+        <li>Independent or regional operator where a modern OS can replace manual workflows</li>
+        <li><strong>Quote-heavy demand</strong> from contractors and jobsite customers</li>
+      </ul>
+    </div>
+    <div>
+      <h4>What Makes These Actionable</h4>
+      <ul class="checklist">
+        <li>Visible <strong>public contact paths</strong> and branch info</li>
+        <li>Clear <strong>operational hypotheses</strong>, not generic "software can help" claims</li>
+        <li>Specific <strong>discovery questions</strong> tied to each business model</li>
+        <li>A practical path to <strong>earn an AE meeting</strong> through real business pain</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h4>Prioritized Account List</h4>
+  <table class="icp">
+    <thead>
+      <tr>
+        <th style="width: 25%">Account</th>
+        <th style="width: 10%">Fit</th>
+        <th style="width: 20%">Priority</th>
+        <th>Why it belongs</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="account">Hillview Equipment</td>
+        <td class="score">96/100</td>
+        <td class="priority">Highest priority</td>
+        <td class="why">Heavy equipment rental + sales · Milford, MA · New England coverage</td>
+      </tr>
+      <tr>
+        <td class="account">Equipment East</td>
+        <td class="score">94/100</td>
+        <td class="priority">Strategic priority</td>
+        <td class="why">DEVELON dealer · 4 locations across MA &amp; NH</td>
+      </tr>
+      <tr>
+        <td class="account">R.S. Rental &amp; Equipment</td>
+        <td class="score">91/100</td>
+        <td class="priority">Very strong SMB ICP</td>
+        <td class="why">Construction rentals, sales, service, parts · Somerset, MA</td>
+      </tr>
+      <tr>
+        <td class="account">ATS Equipment</td>
+        <td class="score">90/100</td>
+        <td class="priority">Strong multi-branch ICP</td>
+        <td class="why">Construction rental + sales · 4 branches across MA &amp; NH</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="divider"></div>
+
+  <div class="panel panel-accent">
+    <h4>Qualification Standard</h4>
+    <p style="color: var(--text-dim); font-size: 9.5pt; margin: 0;">
+      The goal is not to prove these companies are actively shopping for software. The goal is to
+      demonstrate strong BDR account selection: identify accounts where Renterra could plausibly
+      create operational lift, then use discovery to validate the pain before positioning a demo.
+    </p>
+  </div>
+
+  <div class="page-footer">
+    <span>Renterra Mock Exercise · Chris Khoury</span>
+    <span>02</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE 3 — COMPETITIVE LANDSCAPE -->
+<!-- ============================================================ -->
+<div class="page">
+  <div class="page-header">
+    <span>§ 02 — Competitive Landscape</span>
+    <span class="right">Renterra BDR · Chris Khoury</span>
+  </div>
+
+  <div class="eyebrow">What I'm replacing</div>
+  <h1>Why Renterra wins inside the ICP.</h1>
+  <p class="lead" style="max-width: 6.5in; margin-bottom: 0.25in;">
+    Independent rental shops live somewhere on a software spectrum: from notebook-and-QuickBooks
+    on one end to Wynne RentalMan ERP on the other. Renterra targets the middle —
+    operators who have outgrown spreadsheets but find legacy ERPs too heavy, too expensive,
+    and too clunky for the field.
+  </p>
+
+  <table class="competitors">
+    <thead>
+      <tr>
+        <th style="width: 24%">What they're on today</th>
+        <th style="width: 28%">Profile</th>
+        <th>Renterra angle</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="what">Spreadsheets / paper / QuickBooks</td>
+        <td class="tier">Small independents, &lt;50 assets</td>
+        <td class="wedge-col">Stop the double entry — one system instead of four</td>
+      </tr>
+      <tr>
+        <td class="what">Point of Rental Essentials</td>
+        <td class="tier">Mid-tier incumbent, largest market share</td>
+        <td class="wedge-col">Modern UI, mobile-first, faster onboarding (1–2 weeks)</td>
+      </tr>
+      <tr>
+        <td class="what">Texada / InTempo</td>
+        <td class="tier">Mid-to-enterprise, construction-heavy</td>
+        <td class="wedge-col">Lighter, cheaper, built for independents</td>
+      </tr>
+      <tr>
+        <td class="what">Wynne RentalMan</td>
+        <td class="tier">Enterprise ERP, AS400 roots, $500+/mo</td>
+        <td class="wedge-col">Cloud-native, no AS400 learning curve</td>
+      </tr>
+      <tr>
+        <td class="what">Quipli / EZRentOut</td>
+        <td class="tier">Cloud SaaS, similar tier</td>
+        <td class="wedge-col">Revenue-focused: quote follow-up, utilization, storefront</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="divider"></div>
+
+  <h4>Renterra Module Map</h4>
+  <p style="color: var(--text-dim); font-size: 9.5pt; margin-bottom: 0.15in;">
+    The seven modules I'll anchor every discovery conversation to — only after I've heard the pain in their words.
+  </p>
+
+  <div class="three-col">
+    <div class="panel" style="margin-bottom: 0;">
+      <h4>Front Office</h4>
+      <ul class="checklist" style="margin-top: 0.06in;">
+        <li>Branded quotes via text &amp; email</li>
+        <li>Automated quote follow-up</li>
+        <li>Branded online storefront</li>
+        <li>Customer portal</li>
+      </ul>
+    </div>
+    <div class="panel" style="margin-bottom: 0;">
+      <h4>Operations</h4>
+      <ul class="checklist" style="margin-top: 0.06in;">
+        <li>Real-time inventory &amp; availability</li>
+        <li>Drag-and-drop dispatch board</li>
+        <li>Mobile inspection photos &amp; videos</li>
+        <li>Maintenance &amp; service logs</li>
+      </ul>
+    </div>
+    <div class="panel" style="margin-bottom: 0;">
+      <h4>Money</h4>
+      <ul class="checklist" style="margin-top: 0.06in;">
+        <li>Automated invoicing</li>
+        <li>Aging balances &amp; payment processing</li>
+        <li>Utilization &amp; revenue-per-asset reporting</li>
+        <li>Dynamic pricing suggestions</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="panel panel-accent" style="margin-top: 0.2in;">
+    <h4>Signals on Renterra Itself</h4>
+    <p style="color: var(--text-dim); font-size: 9.5pt; margin: 0;">
+      $9M Series A (Jan 2026, Avenue Growth Partners). Hundreds of rental companies across US/Canada.
+      Sweet spot is 1–10 locations. Go-live in 1–2 weeks with a dedicated onboarding rep — a real differentiator
+      vs. Wynne/Texada multi-quarter implementations.
+    </p>
+  </div>
+
+  <div class="page-footer">
+    <span>Renterra Mock Exercise · Chris Khoury</span>
+    <span>03</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE 4 — HILLVIEW -->
+<!-- ============================================================ -->
+<div class="page">
+  <div class="page-header">
+    <span>§ 03 — Target Account 01</span>
+    <span class="right">Highest Priority</span>
+  </div>
+
+  <div class="account-header">
+    <div class="account-num">01</div>
+    <div class="account-title-block">
+      <div class="priority-label">Highest Priority — Mock Call Target</div>
+      <h2>Hillview Equipment</h2>
+      <div class="desc">Heavy equipment rental + sales · Milford, MA · New England coverage</div>
+    </div>
+    <div class="score-circle">
+      <div class="v">96</div>
+      <div class="l">ICP / 100</div>
+    </div>
+  </div>
+
+  <div class="pov-banner">
+    <strong>BDR Point of View</strong>
+    Pure heavy-equipment ICP: contractor-only rentals, transport support, parts &amp; service,
+    long-reach packages, and high-value asset tracking. The cleanest fit on the list.
+  </div>
+
+  <div class="two-col">
+    <div>
+      <h4>Business Snapshot</h4>
+      <table class="snapshot">
+        <tr>
+          <td class="label">Founded</td>
+          <td class="val">Renting, selling, and shipping used construction machinery since <strong>1990</strong>.</td>
+        </tr>
+        <tr>
+          <td class="label">Footprint</td>
+          <td class="val">Milford, MA HQ. Serves contractors across MA &amp; New England. Imports/exports globally.</td>
+        </tr>
+        <tr>
+          <td class="label">Fleet</td>
+          <td class="val">Excavators, wheel loaders, dozers, skid steers, long-reach packages, transport, parts &amp; service.</td>
+        </tr>
+        <tr>
+          <td class="label">Scale</td>
+          <td class="val">LinkedIn: <strong>11–50 employees</strong>. Revenue not reliably public.</td>
+        </tr>
+        <tr>
+          <td class="label">Contacts</td>
+          <td class="val"><strong>David Pyne</strong> (President) · <strong>Pat Kennelly</strong> (rental) · info@hillviewequipment.com · (774) 737-7433</td>
+        </tr>
+      </table>
+    </div>
+    <div>
+      <h4>Likely Operational Pain</h4>
+      <ul class="checklist">
+        <li><strong>Asset state clarity</strong> across rental, sale, service, transport, and inspection</li>
+        <li><strong>Transport scheduling</strong> for contractors across New England</li>
+        <li><strong>Inspection documentation</strong> &amp; damage accountability on high-value machines</li>
+        <li><strong>Quote speed &amp; follow-up</strong> for contractor-driven rentals</li>
+      </ul>
+
+      <h4 style="margin-top: 0.15in;">Renterra Value Map</h4>
+      <div class="chips">
+        <span class="chip">Inventory state visibility</span>
+        <span class="chip">Mobile inspection photos</span>
+        <span class="chip">Dispatch &amp; delivery</span>
+        <span class="chip">Maintenance logs</span>
+        <span class="chip">Quote-to-invoice flow</span>
+      </div>
+    </div>
+  </div>
+
+  <h4>Discovery Questions</h4>
+  <ul class="discovery">
+    <li>How do you know whether a machine is ready, rented, reserved, in transport, for sale, or down for service — and who owns that view?</li>
+    <li>Where do inspection photos and condition notes live today, and how do they tie back to the rental contract?</li>
+    <li>What causes the most manual follow-up: quote approvals, certificates of insurance, delivery timing, or rental extensions?</li>
+  </ul>
+
+  <div class="wedge">
+    <div class="lab">Opening Wedge</div>
+    <div class="quote">You rent and sell high-value machines across New England. I'm curious how your team keeps availability, transport, inspection, and service status aligned without extra manual work.</div>
+  </div>
+
+  <div class="page-footer">
+    <span>Hillview Equipment · 96/100</span>
+    <span>04</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE 5 — EQUIPMENT EAST -->
+<!-- ============================================================ -->
+<div class="page">
+  <div class="page-header">
+    <span>§ 03 — Target Account 02</span>
+    <span class="right">Strategic Priority</span>
+  </div>
+
+  <div class="account-header">
+    <div class="account-num">02</div>
+    <div class="account-title-block">
+      <div class="priority-label">Strategic Priority — Multi-Branch Dealer</div>
+      <h2>Equipment East</h2>
+      <div class="desc">DEVELON authorized dealer · Dracut, Brockton, Auburn MA + Bow NH</div>
+    </div>
+    <div class="score-circle">
+      <div class="v">94</div>
+      <div class="l">ICP / 100</div>
+    </div>
+  </div>
+
+  <div class="pov-banner">
+    <strong>BDR Point of View</strong>
+    Dealer/rental hybrid with multiple locations, rentals, leases, sales, parts, service, and strong growth signals.
+    A high-value modernization target where coordination — not demand — is the constraint.
+  </div>
+
+  <div class="two-col">
+    <div>
+      <h4>Business Snapshot</h4>
+      <table class="snapshot">
+        <tr>
+          <td class="label">Founded</td>
+          <td class="val">2009 · Authorized <strong>DEVELON dealer</strong>, top-performing dealer recognition multiple years.</td>
+        </tr>
+        <tr>
+          <td class="label">Footprint</td>
+          <td class="val">4 locations: Dracut, Brockton, Auburn (MA) + Bow (NH).</td>
+        </tr>
+        <tr>
+          <td class="label">Fleet</td>
+          <td class="val">Construction equipment sales, rentals, leases, attachments, parts &amp; service.</td>
+        </tr>
+        <tr>
+          <td class="label">Scale</td>
+          <td class="val">BBB: 15 employees · LinkedIn: 51–200. <em>Conflicting public estimates — treat as multi-location SMB/mid-market.</em></td>
+        </tr>
+        <tr>
+          <td class="label">Contacts</td>
+          <td class="val"><strong>Giovanni Albanese</strong> (owner) · <strong>Andrea Ciano</strong> (partner) · <strong>Gilda Albanese</strong> (admin director) · (978) 454-3320 · gilda@equipmenteast.com</td>
+        </tr>
+      </table>
+    </div>
+    <div>
+      <h4>Likely Operational Pain</h4>
+      <ul class="checklist">
+        <li><strong>Multi-location availability</strong> and reservation visibility</li>
+        <li>Rental workflows sitting <strong>alongside dealer sales, leasing, parts, and service</strong></li>
+        <li><strong>Customer follow-up</strong> across quote, delivery, attachment fit, and rent-vs-lease decisions</li>
+        <li><strong>Handoff quality</strong> between sales, rental desk, service, and accounting</li>
+      </ul>
+
+      <h4 style="margin-top: 0.15in;">Renterra Value Map</h4>
+      <div class="chips">
+        <span class="chip">Multi-location inventory</span>
+        <span class="chip">CRM + quote pipeline</span>
+        <span class="chip">Rental/lease quoting</span>
+        <span class="chip">Service visibility</span>
+        <span class="chip">Customer portal</span>
+      </div>
+    </div>
+  </div>
+
+  <h4>Discovery Questions</h4>
+  <ul class="discovery">
+    <li>How do rental reps in Dracut know what's available in Bow or Brockton — phone, text, system?</li>
+    <li>When a customer wants to rent or lease, how does the team track that opportunity through the decision?</li>
+    <li>Which handoff creates the most friction: sales to rental, rental to service, or rental to billing?</li>
+  </ul>
+
+  <div class="wedge">
+    <div class="lab">Opening Wedge</div>
+    <div class="quote">As a multi-location dealer-rental operation, the challenge isn't just renting equipment — it's keeping branch availability, quotes, service, parts, and follow-up in sync across four sites.</div>
+  </div>
+
+  <div class="page-footer">
+    <span>Equipment East · 94/100</span>
+    <span>05</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE 6 — R.S. RENTAL -->
+<!-- ============================================================ -->
+<div class="page">
+  <div class="page-header">
+    <span>§ 03 — Target Account 03</span>
+    <span class="right">Very Strong SMB ICP</span>
+  </div>
+
+  <div class="account-header">
+    <div class="account-num">03</div>
+    <div class="account-title-block">
+      <div class="priority-label">Very Strong SMB ICP — Family-Owned</div>
+      <h2>R.S. Rental &amp; Equipment</h2>
+      <div class="desc">Construction equipment rentals, sales, service &amp; parts · Somerset, MA</div>
+    </div>
+    <div class="score-circle">
+      <div class="v">91</div>
+      <div class="l">ICP / 100</div>
+    </div>
+  </div>
+
+  <div class="pov-banner">
+    <strong>BDR Point of View</strong>
+    Clean independent rental ICP: family-owned, construction-focused, broad rental categories, and lean-team
+    operational pressure where one system replaces six manual workflows.
+  </div>
+
+  <div class="two-col">
+    <div>
+      <h4>Business Snapshot</h4>
+      <table class="snapshot">
+        <tr>
+          <td class="label">Founded</td>
+          <td class="val">BBB lists business start <strong>1984</strong>. Positions around construction equipment sales, rentals, service, parts &amp; financing.</td>
+        </tr>
+        <tr>
+          <td class="label">Footprint</td>
+          <td class="val">Somerset, MA — serving MA and RI customers (incl. Boston, Cape Cod per public reviews).</td>
+        </tr>
+        <tr>
+          <td class="label">Fleet</td>
+          <td class="val">Aerial lifts, air compressors, concrete equipment, generators, compaction, brush chippers, compact excavators, skid steers, telehandlers, forklifts, light towers.</td>
+        </tr>
+        <tr>
+          <td class="label">Scale</td>
+          <td class="val">BBB: 7 employees · Prospeo: ~$10M revenue estimate. <em>Revenue is directional, not verified.</em></td>
+        </tr>
+        <tr>
+          <td class="label">Contacts</td>
+          <td class="val"><strong>Richard Sousa</strong> (owner / ops manager) · (866) 650-5297 / (508) 672-1051</td>
+        </tr>
+      </table>
+    </div>
+    <div>
+      <h4>Likely Operational Pain</h4>
+      <ul class="checklist">
+        <li>Lean team doing <strong>quoting, counter work, service coordination, and follow-up</strong></li>
+        <li><strong>Daily/weekly/monthly</strong> rental terms requiring clean status &amp; extension tracking</li>
+        <li><strong>Equipment readiness</strong> — repairs and parts/service interactions before next customer</li>
+        <li>Manual back-and-forth for reservations and availability</li>
+      </ul>
+
+      <h4 style="margin-top: 0.15in;">Renterra Value Map</h4>
+      <div class="chips">
+        <span class="chip">Faster quote creation</span>
+        <span class="chip">Counter-to-service handoff</span>
+        <span class="chip">Extension tracking</span>
+        <span class="chip">Payment &amp; invoice flow</span>
+        <span class="chip">Customer self-service</span>
+      </div>
+    </div>
+  </div>
+
+  <h4>Discovery Questions</h4>
+  <ul class="discovery">
+    <li>How does your team track daily, weekly, and monthly rentals today — and what happens when someone wants to extend?</li>
+    <li>What happens when a rental item comes back and needs service before the next customer picks it up?</li>
+    <li>How many touches does it take, on average, from customer request to reserved rental?</li>
+  </ul>
+
+  <div class="wedge">
+    <div class="lab">Opening Wedge</div>
+    <div class="quote">For independent shops your size, the biggest opportunity is usually removing the extra touches between quote, reservation, service readiness, pickup, and payment — not adding software for software's sake.</div>
+  </div>
+
+  <div class="page-footer">
+    <span>R.S. Rental &amp; Equipment · 91/100</span>
+    <span>06</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE 7 — ATS -->
+<!-- ============================================================ -->
+<div class="page">
+  <div class="page-header">
+    <span>§ 03 — Target Account 04</span>
+    <span class="right">Strong Multi-Branch ICP</span>
+  </div>
+
+  <div class="account-header">
+    <div class="account-num">04</div>
+    <div class="account-title-block">
+      <div class="priority-label">Strong Multi-Branch ICP — Independent</div>
+      <h2>ATS Equipment</h2>
+      <div class="desc">Construction equipment rental + sales · Boston, Auburn, Rehoboth MA + Candia NH</div>
+    </div>
+    <div class="score-circle">
+      <div class="v">90</div>
+      <div class="l">ICP / 100</div>
+    </div>
+  </div>
+
+  <div class="pov-banner">
+    <strong>BDR Point of View</strong>
+    Independently owned, multi-branch construction rental operation with broad fleet categories,
+    service &amp; parts, named branch managers, and clear coordination complexity across four sites.
+  </div>
+
+  <div class="two-col">
+    <div>
+      <h4>Business Snapshot</h4>
+      <table class="snapshot">
+        <tr>
+          <td class="label">Founded</td>
+          <td class="val">BBB: business start <strong>1985</strong>. Describes itself as independently-owned construction rental and sales.</td>
+        </tr>
+        <tr>
+          <td class="label">Footprint</td>
+          <td class="val">4 branches: Boston, Auburn, Rehoboth (MA) + Candia (NH).</td>
+        </tr>
+        <tr>
+          <td class="label">Fleet</td>
+          <td class="val">Air equipment, compaction/paving, concrete/masonry, earthmoving, pumps/hoses, generators/tools, material handling, heating/dehumidification, service, parts.</td>
+        </tr>
+        <tr>
+          <td class="label">Scale</td>
+          <td class="val">BBB: 20 employees · Datanyze: ~$8.4M / 36 employees. <em>Directional only.</em></td>
+        </tr>
+        <tr>
+          <td class="label">Contacts</td>
+          <td class="val"><strong>Brian M. Connolly</strong> (President) · branch contacts: John Connolly, Peter Tarasuk, Mark Andrade, Mike Robinson · info@atsequipment.com</td>
+        </tr>
+      </table>
+    </div>
+    <div>
+      <h4>Likely Operational Pain</h4>
+      <ul class="checklist">
+        <li><strong>Branch-to-branch fleet visibility</strong> and local availability checks</li>
+        <li>Rental categories spanning <strong>small tools through earthmoving and lifts</strong></li>
+        <li><strong>Quote requests</strong> with project location distinct from customer location</li>
+        <li><strong>Service/parts coordination</strong> and after-hours customer support</li>
+      </ul>
+
+      <h4 style="margin-top: 0.15in;">Renterra Value Map</h4>
+      <div class="chips">
+        <span class="chip">Branch inventory visibility</span>
+        <span class="chip">Quote request workflow</span>
+        <span class="chip">Dispatch &amp; pickup planning</span>
+        <span class="chip">Service status tracking</span>
+        <span class="chip">CRM follow-up discipline</span>
+      </div>
+    </div>
+  </div>
+
+  <h4>Discovery Questions</h4>
+  <ul class="discovery">
+    <li>Do branches have visibility into each other's fleet, or is that handled by phone and text?</li>
+    <li>Where do quote requests go after a customer submits the form on the website?</li>
+    <li>How do you decide which branch owns the follow-up when the project location is different from the customer's billing address?</li>
+  </ul>
+
+  <div class="wedge">
+    <div class="lab">Opening Wedge</div>
+    <div class="quote">With four locations and a broad construction rental fleet, I'm curious where the team still relies on calls, texts, or manual work to coordinate availability and follow-up across branches.</div>
+  </div>
+
+  <div class="page-footer">
+    <span>ATS Equipment · 90/100</span>
+    <span>07</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE 8 — COLD CALL FRAMEWORK -->
+<!-- ============================================================ -->
+<div class="page">
+  <div class="page-header">
+    <span>§ 04 — Cold Call Framework</span>
+    <span class="right">Renterra BDR · Chris Khoury</span>
+  </div>
+
+  <div class="eyebrow">The script behind the talk track</div>
+  <h1>Five moves that earn the next conversation.</h1>
+  <p class="lead" style="max-width: 6.5in; margin-bottom: 0.2in;">
+    A 5–10 minute discovery call has one job: get them talking about how they run today,
+    surface one or two real pain points, and earn 20 minutes with an AE. Pitch features and
+    you lose. Ask questions and listen, and you win.
+  </p>
+
+  <div class="flow-step">
+    <div class="flow-num">1</div>
+    <div class="flow-content">
+      <h4>Opener — Permission &amp; pattern interrupt (15–30 sec)</h4>
+      <p>Name the cold call. Ask for 30 seconds. Earn the right to keep talking. Blue-collar phone culture rewards directness — corporate scripts get hung up on inside 5 seconds.</p>
+    </div>
+  </div>
+
+  <div class="wedge" style="margin-top: -0.05in; margin-bottom: 0.15in;">
+    <div class="lab">Script</div>
+    <div class="quote">Hey [Name], this is Chris from Renterra — appreciate you picking up. I'll be honest, this is a cold call. Mind if I take 30 seconds to tell you why I'm calling, and then you can tell me to get lost or keep going?</div>
+  </div>
+
+  <div class="flow-step">
+    <div class="flow-num">2</div>
+    <div class="flow-content">
+      <h4>Observation — Specific research callout</h4>
+      <p>Show I've done the work. Mention something concrete about <em>their</em> business — fleet, locations, services. Generic openers ("hope you're having a great day") signal a bad list.</p>
+    </div>
+  </div>
+
+  <div class="flow-step">
+    <div class="flow-num">3</div>
+    <div class="flow-content">
+      <h4>Problem question — Ask, then shut up</h4>
+      <p>One open-ended question rooted in <em>their</em> business model. Then silence. The first person to speak after a good discovery question loses leverage. Take notes Jimmy can hear me writing — "Got it, let me write that down" signals real listening.</p>
+    </div>
+  </div>
+
+  <div class="flow-step">
+    <div class="flow-num">4</div>
+    <div class="flow-content">
+      <h4>Value bridge — Map Renterra to the pain they confirmed</h4>
+      <p>Mirror the pain back in their words, then anchor to <em>one</em> specific Renterra capability — not the full feature list. See the mapping table below for the trigger-to-anchor moves.</p>
+    </div>
+  </div>
+
+  <div class="flow-step">
+    <div class="flow-num">5</div>
+    <div class="flow-content">
+      <h4>Close — Ask for 20 minutes, not a sale</h4>
+      <p>Two concrete time slots ready. "Fair?" closes for a yes/no without being pushy. Don't ask for a sale on a cold call — ask for the next conversation with an AE.</p>
+    </div>
+  </div>
+
+  <div class="wedge" style="margin-top: -0.05in;">
+    <div class="lab">Close Script</div>
+    <div class="quote">Look, I'm not going to try to sell you anything on this call. What I'd love to do is set up 20 minutes — either later this week or next — where an AE can actually show you what this looks like running for a shop like yours. If after 20 minutes it's not for you, no harm done. Fair?</div>
+  </div>
+
+  <div class="page-footer">
+    <span>Renterra Mock Exercise · Chris Khoury</span>
+    <span>08</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE 9 — PAIN-TO-ANCHOR MAPPING + OBJECTIONS -->
+<!-- ============================================================ -->
+<div class="page">
+  <div class="page-header">
+    <span>§ 05 — Pain Mapping &amp; Objections</span>
+    <span class="right">Renterra BDR · Chris Khoury</span>
+  </div>
+
+  <div class="eyebrow">If they say X, anchor to Y</div>
+  <h1>Pain-to-anchor mapping.</h1>
+
+  <table class="map">
+    <thead>
+      <tr>
+        <th style="width: 50%">If they say…</th>
+        <th>Anchor to…</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="trigger">"We're still on paper and spreadsheets."</td>
+        <td class="anchor">Real-time inventory + dispatch board — one system</td>
+      </tr>
+      <tr>
+        <td class="trigger">"Quotes go out and we forget about them."</td>
+        <td class="anchor">Automated quote follow-up — branded text/email</td>
+      </tr>
+      <tr>
+        <td class="trigger">"I don't know what's idle vs. what's earning."</td>
+        <td class="anchor">Utilization dashboard, revenue-per-asset</td>
+      </tr>
+      <tr>
+        <td class="trigger">"Customers keep asking to book online."</td>
+        <td class="anchor">Branded storefront + customer portal</td>
+      </tr>
+      <tr>
+        <td class="trigger">"Billing is a mess at month-end."</td>
+        <td class="anchor">Automated invoicing, aging balances, payments</td>
+      </tr>
+      <tr>
+        <td class="trigger">"We're on Point of Rental but it's clunky."</td>
+        <td class="anchor">Modern UI, mobile-first, 1–2 week go-live</td>
+      </tr>
+      <tr>
+        <td class="trigger">"Inspection photos live on someone's phone."</td>
+        <td class="anchor">Mobile inspection module tied to the contract</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="divider"></div>
+
+  <div class="eyebrow">Six objections I'll hear — six clean responses</div>
+  <h2 style="margin-bottom: 0.18in;">Objection handling.</h2>
+
+  <div class="two-col">
+    <div>
+      <div class="obj">
+        <div class="question">Objection · 01</div>
+        <div class="said">"We're all set / not interested."</div>
+        <div class="response-lab">Response</div>
+        <div class="response">"Totally fair — most people say that on the first call. Real quick before I let you go: if you had to point to the biggest time-suck in the office right now, what comes to mind? If we can't help with it, I'll leave you alone."</div>
+      </div>
+      <div class="obj">
+        <div class="question">Objection · 02</div>
+        <div class="said">"We already use Point of Rental / Texada."</div>
+        <div class="response-lab">Response</div>
+        <div class="response">"Cool — a lot of our customers came from there. Honest question: if you were starting from scratch today, would you pick them again? Most of the shops we work with switched because the system was either too clunky on mobile or too expensive for what they actually use."</div>
+      </div>
+      <div class="obj">
+        <div class="question">Objection · 03</div>
+        <div class="said">"Just send me an email."</div>
+        <div class="response-lab">Response</div>
+        <div class="response">"Happy to. So I send the right thing — what's the part of the business you'd actually want me to address? Otherwise I'm just sending you a generic brochure you'll ignore, and we both know it."</div>
+      </div>
+    </div>
+    <div>
+      <div class="obj">
+        <div class="question">Objection · 04</div>
+        <div class="said">"We're too small for software."</div>
+        <div class="response-lab">Response</div>
+        <div class="response">"That's actually who we built this for. Our typical customer is one location with somewhere between 50 and 500 pieces. The shops getting hurt are the ones still on paper trying to scale."</div>
+      </div>
+      <div class="obj">
+        <div class="question">Objection · 05</div>
+        <div class="said">"How much does it cost?"</div>
+        <div class="response-lab">Response</div>
+        <div class="response">"Honest answer — pricing's based on locations and asset count, so I can't quote you on the call without knowing your setup. That's actually the perfect reason to grab 20 minutes — I can show you the product and an AE can give you a real number same day."</div>
+      </div>
+      <div class="obj">
+        <div class="question">Objection · 06</div>
+        <div class="said">"I'm too busy right now."</div>
+        <div class="response-lab">Response</div>
+        <div class="response">"I hear you. Quick one — are you the right person to talk to about this, or is that someone else on your team? I'll get out of your hair either way."</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>Renterra Mock Exercise · Chris Khoury</span>
+    <span>09</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE 10 — EXECUTION PLAN -->
+<!-- ============================================================ -->
+<div class="page">
+  <div class="page-header">
+    <span>§ 06 — Execution Plan</span>
+    <span class="right">Day-of the mock</span>
+  </div>
+
+  <div class="eyebrow">Game day</div>
+  <h1>Hillview Equipment — full mock-call run-of-show.</h1>
+  <p class="lead" style="max-width: 6.5in; margin-bottom: 0.2in;">
+    I'd lead with Hillview because it's the cleanest fit: heavy-equipment-first, contractor-oriented,
+    service- and transport-heavy, asset-intensive. The hypothesis writes itself.
+  </p>
+
+  <div class="wedge" style="margin-bottom: 0.25in;">
+    <div class="lab">Cold open for the mock</div>
+    <div class="quote">I noticed Hillview rents, sells, transports, and services heavy equipment across New England. Usually at that point, the hard part is keeping machine availability, inspection condition, transport timing, and service status aligned. How are you managing that today?</div>
+  </div>
+
+  <h4>What I'm listening for</h4>
+  <ul class="checklist" style="margin-bottom: 0.2in;">
+    <li><strong>Manual availability checks</strong> across people or branches</li>
+    <li><strong>Inspection photos</strong> stored outside the rental workflow (someone's iPhone, a shared drive)</li>
+    <li><strong>Delivery and transport</strong> coordinated by texts or a whiteboard</li>
+    <li><strong>Quote follow-up</strong> owned by memory instead of system tasks</li>
+    <li><strong>Service status</strong> not visible to counter or sales teams</li>
+  </ul>
+
+  <div class="do-dont">
+    <div class="col do">
+      <h4>Do</h4>
+      <ul>
+        <li>Use the prospect's name once early, once at the close — not more</li>
+        <li>Match their energy and pace — owner-operators talk faster and shorter than corporate buyers</li>
+        <li>Smile while talking — it audibly changes tone</li>
+        <li>Let silence breathe after a discovery question</li>
+        <li>Take notes the prospect can hear — "Let me write that down"</li>
+        <li>Say "I'd rather not BS you" if I get stuck — honest beats faking it</li>
+      </ul>
+    </div>
+    <div class="col dont">
+      <h4>Don't</h4>
+      <ul>
+        <li>Pitch features in the first 90 seconds — earn the right with a question</li>
+        <li>Use corporate jargon: "platform," "solution," "leverage," "synergies"</li>
+        <li>Fill silence — they will talk if I let them</li>
+        <li>Promise pricing — anchor to the AE call</li>
+        <li>Argue with objections — acknowledge first, then redirect</li>
+        <li>End without a clear next step or a specific time slot</li>
+      </ul>
+    </div>
+  </div>
+
+  <h4>Day-of checklist</h4>
+  <ul class="checklist">
+    <li>This briefing open + Hillview page bookmarked</li>
+    <li>Blank notepad and pen — physical, not screen, to avoid clicking sounds</li>
+    <li>Quiet room with hardline or strong cell signal — bad audio kills credibility instantly</li>
+    <li>Water nearby — voice cracks happen even on 5-min calls</li>
+    <li>Two specific time slots ready for the close ("Thursday at 10, or Friday at 2 — what works?")</li>
+  </ul>
+
+  <div class="page-footer">
+    <span>Renterra Mock Exercise · Chris Khoury</span>
+    <span>10</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE 11 — SOURCES -->
+<!-- ============================================================ -->
+<div class="page">
+  <div class="page-header">
+    <span>§ 07 — Source Notes</span>
+    <span class="right">Renterra BDR · Chris Khoury</span>
+  </div>
+
+  <div class="eyebrow">Receipts</div>
+  <h1>Public research references.</h1>
+  <p class="lead" style="max-width: 6.5in; margin-bottom: 0.25in;">
+    Sources used to build this brief. Revenue and employee figures from third-party directories are
+    treated as <em>directional only</em>; owner/title, location, and service details are prioritized from
+    company websites, BBB profiles, industry publications, and public professional profiles.
+  </p>
+
+  <ul class="sources-list">
+    <li><strong>Renterra Platform</strong> — getrenterra.com (inventory, quotes, payments, dispatch, maintenance, inspections, storefront, customer portal); PRNewswire (Jan 2026 $9M Series A announcement).</li>
+    <li><strong>Hillview Equipment</strong> — hillviewequip.com (about, rental, services, contact); LinkedIn company page and public profiles for employee/role signals.</li>
+    <li><strong>Equipment East</strong> — equipmenteast.com (about, rental, locations); BBB business profile; ARA / Equipment World / ACP construction articles for ownership and dealer recognition.</li>
+    <li><strong>R.S. Rental &amp; Equipment</strong> — rsequipment.com (home, about, rental); BBB profile for owner/start date/employee count; One SouthCoast directory for address/phone; Prospeo for directional revenue estimate.</li>
+    <li><strong>ATS Equipment</strong> — atsequipment.com (home, rental, contact); BBB profile for business start/president/employee count; Datanyze for directional revenue estimate; Pro Contractor Rentals profile for family ownership history.</li>
+    <li><strong>Competitive landscape</strong> — Reservety 2026 equipment rental software guide; Rent2B 2026 rankings; Software Connect / SelectHub roundups for Point of Rental, Wynne RentalMan, Texada/InTempo profiles.</li>
+  </ul>
+
+  <div class="divider"></div>
+
+  <div class="panel panel-accent">
+    <h4>A note on intellectual honesty</h4>
+    <p style="color: var(--text-dim); font-size: 9.5pt; margin: 0;">
+      Where directory sources disagree (Equipment East: 15 vs. 51–200 employees), I've flagged the conflict
+      rather than picking the number that looks better. The goal of this exercise is to demonstrate strong
+      account selection and call preparation — not to over-claim what I can know from public sources before
+      ever speaking with the prospect. Discovery is what validates the hypothesis. This briefing earns me
+      the call.
+    </p>
+  </div>
+
+  <div style="margin-top: 0.5in; text-align: center;">
+    <div class="small-mono" style="color: var(--accent);">— End of briefing —</div>
+    <div style="margin-top: 0.08in; font-family: 'Fraunces', serif; font-style: italic; font-size: 11pt; color: var(--text-dim);">
+      Prepared for Jimmy Kruse · Renterra · May 2026
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>Renterra Mock Exercise · Chris Khoury</span>
+    <span>11</span>
+  </div>
+</div>
+
+</body>
+</html>
