@@ -1,0 +1,1008 @@
+ (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
+diff --git a/index.html b/index.html
+new file mode 100644
+index 0000000000000000000000000000000000000000..a082a530a1c0256f68e1a95bd275159a41979b54
+--- /dev/null
++++ b/index.html
+@@ -0,0 +1,998 @@
++<!DOCTYPE html>
++<html lang="en">
++<head>
++  <meta charset="UTF-8" />
++  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
++  <title>Lebanon Live Monitor</title>
++  <meta name="description" content="Premium live dashboard for Lebanon and regional war updates, powered by near-real-time news discovery." />
++  <style>
++    :root {
++      --bg: #07111f;
++      --bg-2: #0d1b2f;
++      --panel: rgba(13, 27, 47, 0.78);
++      --panel-strong: rgba(11, 22, 39, 0.92);
++      --line: rgba(255,255,255,0.08);
++      --text: #edf3ff;
++      --muted: #9cb2d1;
++      --soft: #6f87aa;
++      --accent: #67e8f9;
++      --accent-2: #7c3aed;
++      --danger: #ff6b6b;
++      --warn: #fbbf24;
++      --ok: #22c55e;
++      --shadow: 0 20px 50px rgba(0,0,0,0.35);
++      --radius-xl: 28px;
++      --radius-lg: 22px;
++      --radius-md: 16px;
++      --blur: blur(18px);
++    }
++
++    * { box-sizing: border-box; }
++    html, body { margin: 0; padding: 0; background: radial-gradient(circle at top, #11223d 0%, var(--bg) 45%, #040812 100%); color: var(--text); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
++    body { min-height: 100vh; }
++
++    .noise,
++    .glow,
++    .glow::before,
++    .glow::after {
++      position: fixed;
++      inset: 0;
++      pointer-events: none;
++      z-index: 0;
++    }
++    .noise {
++      opacity: 0.04;
++      background-image: radial-gradient(circle at 20% 20%, #fff 0 0.7px, transparent 0.8px), radial-gradient(circle at 70% 40%, #fff 0 0.7px, transparent 0.8px), radial-gradient(circle at 40% 80%, #fff 0 0.7px, transparent 0.8px);
++      background-size: 180px 180px;
++    }
++    .glow::before,
++    .glow::after {
++      content: "";
++      filter: blur(100px);
++      opacity: 0.2;
++    }
++    .glow::before {
++      background: radial-gradient(circle at 20% 15%, var(--accent) 0, transparent 35%);
++    }
++    .glow::after {
++      background: radial-gradient(circle at 85% 10%, var(--accent-2) 0, transparent 30%);
++    }
++
++    .app {
++      position: relative;
++      z-index: 1;
++      max-width: 1480px;
++      margin: 0 auto;
++      padding: 28px;
++    }
++
++    .hero {
++      border: 1px solid var(--line);
++      background: linear-gradient(180deg, rgba(13,27,47,0.85), rgba(7,17,31,0.82));
++      backdrop-filter: var(--blur);
++      border-radius: var(--radius-xl);
++      box-shadow: var(--shadow);
++      overflow: hidden;
++      position: relative;
++      padding: 30px;
++    }
++
++    .hero::after {
++      content: "";
++      position: absolute;
++      right: -120px;
++      top: -120px;
++      width: 320px;
++      height: 320px;
++      background: radial-gradient(circle, rgba(103,232,249,0.18), transparent 65%);
++      filter: blur(12px);
++    }
++
++    .hero-top {
++      display: flex;
++      flex-wrap: wrap;
++      gap: 18px;
++      align-items: center;
++      justify-content: space-between;
++      margin-bottom: 28px;
++    }
++
++    .eyebrow {
++      display: inline-flex;
++      align-items: center;
++      gap: 10px;
++      color: var(--accent);
++      letter-spacing: 0.12em;
++      text-transform: uppercase;
++      font-size: 12px;
++      font-weight: 700;
++    }
++
++    .dot {
++      width: 10px;
++      height: 10px;
++      border-radius: 999px;
++      background: var(--ok);
++      box-shadow: 0 0 0 0 rgba(34,197,94,0.65);
++      animation: pulse 1.8s infinite;
++    }
++
++    @keyframes pulse {
++      0% { box-shadow: 0 0 0 0 rgba(34,197,94,0.6); }
++      70% { box-shadow: 0 0 0 12px rgba(34,197,94,0); }
++      100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
++    }
++
++    h1 {
++      font-size: clamp(34px, 6vw, 72px);
++      line-height: 0.95;
++      margin: 10px 0 14px;
++      letter-spacing: -0.05em;
++      max-width: 900px;
++    }
++
++    .sub {
++      color: var(--muted);
++      max-width: 840px;
++      font-size: 16px;
++      line-height: 1.7;
++      margin: 0;
++    }
++
++    .hero-right {
++      display: grid;
++      grid-template-columns: repeat(2, minmax(180px, 1fr));
++      gap: 14px;
++      min-width: min(100%, 390px);
++    }
++
++    .stat {
++      background: rgba(255,255,255,0.04);
++      border: 1px solid var(--line);
++      border-radius: 20px;
++      padding: 18px;
++      min-height: 110px;
++    }
++    .stat-label { color: var(--soft); font-size: 12px; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 10px; }
++    .stat-value { font-size: clamp(24px, 4vw, 34px); font-weight: 800; letter-spacing: -0.04em; }
++    .stat-sub { font-size: 13px; color: var(--muted); margin-top: 6px; }
++
++    .toolbar {
++      display: grid;
++      grid-template-columns: 1.35fr 1fr 1fr auto auto;
++      gap: 14px;
++      margin-top: 28px;
++    }
++
++    .input,
++    .select,
++    .button {
++      border: 1px solid var(--line);
++      background: rgba(255,255,255,0.04);
++      color: var(--text);
++      border-radius: 18px;
++      padding: 15px 16px;
++      font-size: 15px;
++      outline: none;
++      transition: 180ms ease;
++      width: 100%;
++    }
++    .input::placeholder { color: #8aa0be; }
++    .input:focus,
++    .select:focus,
++    .button:focus,
++    .button:hover {
++      border-color: rgba(103,232,249,0.45);
++      box-shadow: 0 0 0 4px rgba(103,232,249,0.08);
++    }
++
++    .button {
++      cursor: pointer;
++      font-weight: 700;
++      background: linear-gradient(135deg, rgba(103,232,249,0.14), rgba(124,58,237,0.18));
++    }
++
++    .grid {
++      display: grid;
++      grid-template-columns: 370px minmax(0, 1fr) 360px;
++      gap: 18px;
++      margin-top: 18px;
++      align-items: start;
++    }
++
++    .panel {
++      border: 1px solid var(--line);
++      background: var(--panel);
++      backdrop-filter: var(--blur);
++      box-shadow: var(--shadow);
++      border-radius: var(--radius-lg);
++      overflow: hidden;
++    }
++
++    .panel-head {
++      padding: 20px 22px;
++      display: flex;
++      align-items: center;
++      justify-content: space-between;
++      gap: 12px;
++      border-bottom: 1px solid var(--line);
++      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
++    }
++    .panel-title { margin: 0; font-size: 16px; letter-spacing: -0.02em; }
++    .panel-meta { color: var(--soft); font-size: 12px; }
++
++    .feed {
++      min-height: 620px;
++      max-height: calc(100vh - 290px);
++      overflow: auto;
++    }
++
++    .feed::-webkit-scrollbar,
++    .side-scroll::-webkit-scrollbar,
++    .timeline::-webkit-scrollbar { width: 10px; height: 10px; }
++    .feed::-webkit-scrollbar-thumb,
++    .side-scroll::-webkit-scrollbar-thumb,
++    .timeline::-webkit-scrollbar-thumb {
++      background: rgba(255,255,255,0.08);
++      border-radius: 999px;
++    }
++
++    .feed-list {
++      display: grid;
++      gap: 12px;
++      padding: 16px;
++    }
++
++    .story {
++      position: relative;
++      border: 1px solid rgba(255,255,255,0.06);
++      background: rgba(255,255,255,0.03);
++      border-radius: 18px;
++      padding: 16px;
++      transition: 180ms ease;
++      cursor: pointer;
++      overflow: hidden;
++    }
++    .story:hover {
++      transform: translateY(-1px);
++      border-color: rgba(103,232,249,0.24);
++      background: rgba(255,255,255,0.045);
++    }
++    .story.active {
++      border-color: rgba(103,232,249,0.45);
++      background: linear-gradient(180deg, rgba(103,232,249,0.08), rgba(255,255,255,0.04));
++      box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
++    }
++
++    .story-top,
++    .detail-top,
++    .inline {
++      display: flex;
++      gap: 10px;
++      flex-wrap: wrap;
++      align-items: center;
++    }
++
++    .chip {
++      display: inline-flex;
++      align-items: center;
++      gap: 8px;
++      height: 30px;
++      border-radius: 999px;
++      padding: 0 12px;
++      border: 1px solid rgba(255,255,255,0.08);
++      background: rgba(255,255,255,0.04);
++      color: var(--muted);
++      font-size: 12px;
++      white-space: nowrap;
++    }
++
++    .chip.score-high { color: #ffd2d2; border-color: rgba(255,107,107,0.25); background: rgba(255,107,107,0.08); }
++    .chip.score-med { color: #ffe5b2; border-color: rgba(251,191,36,0.22); background: rgba(251,191,36,0.08); }
++    .chip.score-low { color: #cdebd6; border-color: rgba(34,197,94,0.22); background: rgba(34,197,94,0.08); }
++
++    .story h3 {
++      font-size: 18px;
++      line-height: 1.35;
++      letter-spacing: -0.03em;
++      margin: 12px 0 10px;
++    }
++
++    .story p,
++    .detail-summary,
++    .small-note,
++    .empty p,
++    .meta-list,
++    .headline-list li {
++      color: var(--muted);
++      font-size: 14px;
++      line-height: 1.65;
++    }
++
++    .story a,
++    .detail a,
++    .footer a {
++      color: var(--accent);
++      text-decoration: none;
++    }
++    .story a:hover,
++    .detail a:hover,
++    .footer a:hover { text-decoration: underline; }
++
++    .detail {
++      min-height: calc(100vh - 290px);
++      display: flex;
++      flex-direction: column;
++      background: linear-gradient(180deg, rgba(255,255,255,0.025), rgba(255,255,255,0.015));
++    }
++
++    .detail-body {
++      padding: 22px;
++      display: grid;
++      gap: 18px;
++    }
++
++    .detail-title {
++      margin: 6px 0 0;
++      font-size: clamp(28px, 4vw, 42px);
++      line-height: 1.02;
++      letter-spacing: -0.05em;
++    }
++
++    .summary-grid {
++      display: grid;
++      grid-template-columns: repeat(3, minmax(0,1fr));
++      gap: 12px;
++    }
++
++    .mini-card,
++    .source-row,
++    .headline-list li,
++    .legend-item {
++      border: 1px solid rgba(255,255,255,0.07);
++      background: rgba(255,255,255,0.03);
++      border-radius: 16px;
++    }
++
++    .mini-card { padding: 14px; }
++    .mini-label { color: var(--soft); font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
++    .mini-value { font-size: 18px; font-weight: 700; letter-spacing: -0.02em; }
++
++    .timeline {
++      display: grid;
++      gap: 10px;
++      max-height: 260px;
++      overflow: auto;
++      padding-right: 4px;
++    }
++
++    .source-list,
++    .headline-list {
++      display: grid;
++      gap: 10px;
++      padding: 0;
++      margin: 0;
++      list-style: none;
++    }
++
++    .source-row,
++    .headline-list li {
++      padding: 14px;
++    }
++
++    .source-name { font-weight: 700; margin-bottom: 6px; }
++    .source-count { color: var(--muted); font-size: 13px; }
++
++    .side {
++      display: grid;
++      gap: 18px;
++      max-height: calc(100vh - 290px);
++      overflow: auto;
++      padding-right: 2px;
++    }
++
++    .side-scroll { max-height: 100%; overflow: auto; }
++
++    .legend {
++      display: grid;
++      gap: 10px;
++    }
++    .legend-item {
++      padding: 14px;
++      display: grid;
++      gap: 8px;
++    }
++    .legend-title { font-weight: 700; }
++
++    .status-row {
++      display: grid;
++      gap: 10px;
++      padding: 18px 22px 22px;
++    }
++
++    .status-bar {
++      height: 10px;
++      background: rgba(255,255,255,0.06);
++      border-radius: 999px;
++      overflow: hidden;
++      border: 1px solid rgba(255,255,255,0.06);
++    }
++    .status-fill {
++      width: 0%;
++      height: 100%;
++      border-radius: 999px;
++      background: linear-gradient(90deg, var(--accent), var(--accent-2));
++      transition: width 300ms ease;
++    }
++
++    .footer {
++      margin: 18px 0 10px;
++      display: flex;
++      flex-wrap: wrap;
++      gap: 10px 18px;
++      align-items: center;
++      justify-content: space-between;
++      color: var(--soft);
++      font-size: 13px;
++    }
++
++    .empty,
++    .loading {
++      padding: 24px;
++      text-align: center;
++    }
++
++    .loading-spinner {
++      width: 44px;
++      height: 44px;
++      border-radius: 999px;
++      margin: 0 auto 14px;
++      border: 3px solid rgba(255,255,255,0.12);
++      border-top-color: var(--accent);
++      animation: spin 0.8s linear infinite;
++    }
++    @keyframes spin { to { transform: rotate(360deg); } }
++
++    .tiny {
++      font-size: 12px;
++      color: var(--soft);
++    }
++
++    @media (max-width: 1280px) {
++      .grid { grid-template-columns: 330px minmax(0, 1fr); }
++      .side { grid-column: 1 / -1; max-height: none; }
++    }
++
++    @media (max-width: 960px) {
++      .app { padding: 16px; }
++      .hero { padding: 18px; }
++      .toolbar { grid-template-columns: 1fr 1fr; }
++      .grid { grid-template-columns: 1fr; }
++      .feed, .detail, .side { max-height: none; min-height: auto; }
++      .summary-grid { grid-template-columns: 1fr; }
++      .hero-right { grid-template-columns: 1fr 1fr; width: 100%; }
++    }
++
++    @media (max-width: 640px) {
++      .toolbar { grid-template-columns: 1fr; }
++      .hero-right { grid-template-columns: 1fr; }
++      h1 { line-height: 1.02; }
++    }
++  </style>
++</head>
++<body>
++  <div class="noise"></div>
++  <div class="glow"></div>
++
++  <div class="app">
++    <section class="hero">
++      <div class="hero-top">
++        <div>
++          <div class="eyebrow"><span class="dot"></span> Live intelligence monitor</div>
++          <h1>Lebanon & Regional War Live Feed</h1>
++          <p class="sub">
++            A high-signal dashboard for breaking developments, frontline headlines, cross-source clustering, and rapid refresh.
++            Built to surface the most relevant live updates tied to Lebanon, the border, strikes, diplomacy, escalation, ceasefire efforts, and regional spillover.
++          </p>
++        </div>
++        <div class="hero-right">
++          <div class="stat">
++            <div class="stat-label">Stories tracked</div>
++            <div id="storiesTracked" class="stat-value">0</div>
++            <div class="stat-sub">Deduplicated live items</div>
++          </div>
++          <div class="stat">
++            <div class="stat-label">Last sync</div>
++            <div id="lastSync" class="stat-value">—</div>
++            <div class="stat-sub">Auto-refresh every 90s</div>
++          </div>
++          <div class="stat">
++            <div class="stat-label">Signal level</div>
++            <div id="signalLevel" class="stat-value">—</div>
++            <div class="stat-sub">Based on keyword intensity</div>
++          </div>
++          <div class="stat">
++            <div class="stat-label">Sources</div>
++            <div id="sourceCount" class="stat-value">0</div>
++            <div class="stat-sub">Distinct publishers in view</div>
++          </div>
++        </div>
++      </div>
++
++      <div class="toolbar">
++        <input id="searchInput" class="input" type="text" value="Lebanon OR Beirut OR Hezbollah OR Israel Lebanon border OR South Lebanon OR Tyre OR Nabatieh OR ceasefire OR strike" placeholder="Edit tracking query" />
++        <select id="windowSelect" class="select">
++          <option value="24h">Last 24 hours</option>
++          <option value="48h" selected>Last 48 hours</option>
++          <option value="7d">Last 7 days</option>
++        </select>
++        <select id="sortSelect" class="select">
++          <option value="score">Sort by urgency</option>
++          <option value="time">Sort by newest</option>
++          <option value="source">Sort by source</option>
++        </select>
++        <button id="refreshBtn" class="button">Refresh now</button>
++        <button id="toggleAutoBtn" class="button">Pause auto</button>
++      </div>
++    </section>
++
++    <section class="grid">
++      <aside class="panel">
++        <div class="panel-head">
++          <div>
++            <h2 class="panel-title">Live stream</h2>
++            <div id="resultsMeta" class="panel-meta">Waiting for first sync</div>
++          </div>
++          <div id="refreshState" class="chip">Idle</div>
++        </div>
++        <div class="feed">
++          <div id="feedList" class="feed-list">
++            <div class="loading">
++              <div class="loading-spinner"></div>
++              <div>Fetching live coverage…</div>
++            </div>
++          </div>
++        </div>
++      </aside>
++
++      <main class="panel detail">
++        <div class="panel-head">
++          <div>
++            <h2 class="panel-title">Story focus</h2>
++            <div class="panel-meta">Click any item on the left to inspect it</div>
++          </div>
++          <div id="detailBadge" class="chip">No story selected</div>
++        </div>
++        <div id="detailBody" class="detail-body">
++          <div class="empty">
++            <h3 style="margin-top:0">Ready</h3>
++            <p>
++              This center panel shows the selected article, timing, source metadata, urgency score, extraction cues, and quick access to the original report.
++            </p>
++          </div>
++        </div>
++      </main>
++
++      <aside class="side">
++        <section class="panel">
++          <div class="panel-head">
++            <div>
++              <h2 class="panel-title">Situation map</h2>
++              <div class="panel-meta">Keyword pressure and refresh health</div>
++            </div>
++          </div>
++          <div class="status-row">
++            <div class="inline" style="justify-content:space-between">
++              <span class="small-note">Current alert intensity</span>
++              <strong id="intensityLabel">—</strong>
++            </div>
++            <div class="status-bar"><div id="statusFill" class="status-fill"></div></div>
++            <div class="legend">
++              <div class="legend-item">
++                <div class="legend-title">High-risk terms</div>
++                <div class="small-note">strike, killed, missile, drone, border, evacuation, artillery, ceasefire collapse, incursion</div>
++              </div>
++              <div class="legend-item">
++                <div class="legend-title">Watch terms</div>
++                <div class="small-note">negotiation, truce, diplomacy, envoy, aid, talks, tension, warning, escalation</div>
++              </div>
++            </div>
++          </div>
++        </section>
++
++        <section class="panel side-scroll">
++          <div class="panel-head">
++            <div>
++              <h2 class="panel-title">Top publishers</h2>
++              <div class="panel-meta">Who is driving the current feed</div>
++            </div>
++          </div>
++          <div style="padding:16px">
++            <ul id="sourceList" class="source-list"></ul>
++          </div>
++        </section>
++
++        <section class="panel side-scroll">
++          <div class="panel-head">
++            <div>
++              <h2 class="panel-title">Headline pulse</h2>
++              <div class="panel-meta">Fast scan of the strongest items</div>
++            </div>
++          </div>
++          <div style="padding:16px">
++            <ul id="headlineList" class="headline-list"></ul>
++          </div>
++        </section>
++      </aside>
++    </section>
++
++    <div class="footer">
++      <div>
++        Primary engine: GDELT near-real-time news discovery. Optional RSS ingestion can be added later with a small proxy.
++      </div>
++      <div>
++        This page ranks headlines by keyword urgency and source freshness. Verify critical facts with the original publisher.
++      </div>
++    </div>
++  </div>
++
++  <script>
++    const state = {
++      items: [],
++      filtered: [],
++      selectedId: null,
++      autoRefresh: true,
++      timer: null,
++      refreshEveryMs: 90_000,
++    };
++
++    const HIGH_RISK_TERMS = [
++      'strike','strikes','killed','dead','missile','rocket','drone','border','evacuation','artillery','raid','incursion','airstrike','attack','clash','shelling','ceasefire collapse'
++    ];
++    const WATCH_TERMS = [
++      'ceasefire','truce','talks','negotiation','diplomacy','envoy','warning','tension','aid','agreement','mediator','escalation'
++    ];
++
++    const els = {
++      searchInput: document.getElementById('searchInput'),
++      windowSelect: document.getElementById('windowSelect'),
++      sortSelect: document.getElementById('sortSelect'),
++      refreshBtn: document.getElementById('refreshBtn'),
++      toggleAutoBtn: document.getElementById('toggleAutoBtn'),
++      feedList: document.getElementById('feedList'),
++      detailBody: document.getElementById('detailBody'),
++      detailBadge: document.getElementById('detailBadge'),
++      resultsMeta: document.getElementById('resultsMeta'),
++      refreshState: document.getElementById('refreshState'),
++      storiesTracked: document.getElementById('storiesTracked'),
++      lastSync: document.getElementById('lastSync'),
++      signalLevel: document.getElementById('signalLevel'),
++      sourceCount: document.getElementById('sourceCount'),
++      sourceList: document.getElementById('sourceList'),
++      headlineList: document.getElementById('headlineList'),
++      statusFill: document.getElementById('statusFill'),
++      intensityLabel: document.getElementById('intensityLabel'),
++    };
++
++    function escapeHtml(str = '') {
++      return String(str)
++        .replaceAll('&', '&amp;')
++        .replaceAll('<', '&lt;')
++        .replaceAll('>', '&gt;')
++        .replaceAll('"', '&quot;')
++        .replaceAll("'", '&#39;');
++    }
++
++    function formatAge(dateString) {
++      const date = new Date(dateString);
++      const diff = Date.now() - date.getTime();
++      const mins = Math.max(1, Math.round(diff / 60000));
++      if (mins < 60) return `${mins}m ago`;
++      const hrs = Math.round(mins / 60);
++      if (hrs < 48) return `${hrs}h ago`;
++      const days = Math.round(hrs / 24);
++      return `${days}d ago`;
++    }
++
++    function formatStamp(dateString) {
++      const d = new Date(dateString);
++      return d.toLocaleString([], {
++        year: 'numeric', month: 'short', day: 'numeric',
++        hour: '2-digit', minute: '2-digit'
++      });
++    }
++
++    function scoreStory(item) {
++      const text = `${item.title} ${item.summary}`.toLowerCase();
++      let score = 0;
++      HIGH_RISK_TERMS.forEach(term => { if (text.includes(term)) score += 14; });
++      WATCH_TERMS.forEach(term => { if (text.includes(term)) score += 7; });
++      if (text.includes('lebanon')) score += 12;
++      if (text.includes('beirut')) score += 10;
++      if (text.includes('south lebanon')) score += 10;
++      if (text.includes('hezbollah')) score += 12;
++      if (text.includes('israel')) score += 8;
++      if (text.includes('border')) score += 7;
++      const ageHours = (Date.now() - new Date(item.seendate).getTime()) / 36e5;
++      score += Math.max(0, 28 - ageHours * 2.5);
++      return Math.round(score);
++    }
++
++    function scoreClass(score) {
++      if (score >= 70) return 'score-high';
++      if (score >= 40) return 'score-med';
++      return 'score-low';
++    }
++
++    function intensityFromItems(items) {
++      if (!items.length) return { label: 'Quiet', pct: 8 };
++      const avg = items.reduce((sum, item) => sum + item.score, 0) / items.length;
++      if (avg >= 70) return { label: 'Critical', pct: 94 };
++      if (avg >= 55) return { label: 'Elevated', pct: 76 };
++      if (avg >= 38) return { label: 'Active', pct: 56 };
++      return { label: 'Monitoring', pct: 32 };
++    }
++
++    function groupSources(items) {
++      const map = new Map();
++      for (const item of items) {
++        const source = item.domain || 'Unknown source';
++        map.set(source, (map.get(source) || 0) + 1);
++      }
++      return [...map.entries()].sort((a,b) => b[1] - a[1]).slice(0, 8);
++    }
++
++    function dedupeItems(items) {
++      const seen = new Set();
++      return items.filter(item => {
++        const key = (item.title || '').toLowerCase().replace(/[^a-z0-9 ]/g, '').trim();
++        if (!key || seen.has(key)) return false;
++        seen.add(key);
++        return true;
++      });
++    }
++
++    function windowModeToHours(mode) {
++      if (mode === '24h') return 24;
++      if (mode === '7d') return 24 * 7;
++      return 48;
++    }
++
++    async function fetchGdelt(query, hours) {
++      const mode = hours <= 24 ? 'timelinemode=timelinevolraw' : 'timelinemode=timelinevol';
++      const endpoint = `https://api.gdeltproject.org/api/v2/doc/doc?query=${encodeURIComponent(query)}&mode=artlist&maxrecords=75&sort=datedesc&format=json&timespan=${hours}hours`;
++      const res = await fetch(endpoint);
++      if (!res.ok) throw new Error(`GDELT request failed with ${res.status}`);
++      const data = await res.json();
++      const articles = Array.isArray(data.articles) ? data.articles : [];
++      return articles.map((article, index) => ({
++        id: `${(article.url || article.title || index).replace(/\W+/g, '_')}`,
++        title: article.title || 'Untitled',
++        url: article.url || '#',
++        domain: article.domain || new URL(article.url).hostname,
++        seendate: article.seendate || new Date().toISOString(),
++        sourcecountry: article.sourcecountry || '—',
++        language: article.language || '—',
++        socialimage: article.socialimage || '',
++        summary: article.excerpt || article.snippet || article.title || '',
++      }));
++    }
++
++    function applyFiltersAndSort() {
++      const search = els.searchInput.value.trim().toLowerCase();
++      const sortMode = els.sortSelect.value;
++      let items = [...state.items];
++
++      if (search) {
++        items = items.filter(item => `${item.title} ${item.summary} ${item.domain}`.toLowerCase().includes(search) || item.rawQueryMatch);
++      }
++
++      if (sortMode === 'time') {
++        items.sort((a,b) => new Date(b.seendate) - new Date(a.seendate));
++      } else if (sortMode === 'source') {
++        items.sort((a,b) => (a.domain || '').localeCompare(b.domain || ''));
++      } else {
++        items.sort((a,b) => b.score - a.score || new Date(b.seendate) - new Date(a.seendate));
++      }
++
++      state.filtered = items;
++      if (!state.selectedId || !items.find(i => i.id === state.selectedId)) {
++        state.selectedId = items[0]?.id || null;
++      }
++    }
++
++    function renderFeed() {
++      const items = state.filtered;
++      if (!items.length) {
++        els.feedList.innerHTML = `<div class="empty"><h3>No results</h3><p>Try broadening the query, changing the time window, or refreshing again.</p></div>`;
++        return;
++      }
++
++      els.feedList.innerHTML = items.map(item => `
++        <article class="story ${item.id === state.selectedId ? 'active' : ''}" data-id="${escapeHtml(item.id)}">
++          <div class="story-top">
++            <span class="chip ${scoreClass(item.score)}">Urgency ${item.score}</span>
++            <span class="chip">${escapeHtml(item.domain || 'Unknown')}</span>
++            <span class="chip">${escapeHtml(formatAge(item.seendate))}</span>
++          </div>
++          <h3>${escapeHtml(item.title)}</h3>
++          <p>${escapeHtml(item.summary || 'No summary available.')}</p>
++          <div class="inline">
++            <span class="tiny">Seen ${escapeHtml(formatStamp(item.seendate))}</span>
++          </div>
++        </article>
++      `).join('');
++
++      [...els.feedList.querySelectorAll('.story')].forEach(card => {
++        card.addEventListener('click', () => {
++          state.selectedId = card.dataset.id;
++          renderAll();
++        });
++      });
++    }
++
++    function renderDetail() {
++      const item = state.filtered.find(i => i.id === state.selectedId);
++      if (!item) {
++        els.detailBadge.textContent = 'No story selected';
++        els.detailBody.innerHTML = `<div class="empty"><h3>No story</h3><p>The selected story is no longer in the active results.</p></div>`;
++        return;
++      }
++
++      const matchedHigh = HIGH_RISK_TERMS.filter(term => (`${item.title} ${item.summary}`).toLowerCase().includes(term));
++      const matchedWatch = WATCH_TERMS.filter(term => (`${item.title} ${item.summary}`).toLowerCase().includes(term));
++
++      els.detailBadge.className = `chip ${scoreClass(item.score)}`;
++      els.detailBadge.textContent = `Urgency ${item.score}`;
++
++      els.detailBody.innerHTML = `
++        <div class="detail-top">
++          <span class="chip">${escapeHtml(item.domain || 'Unknown')}</span>
++          <span class="chip">${escapeHtml(formatAge(item.seendate))}</span>
++          <span class="chip">${escapeHtml(item.language || '—')}</span>
++          <span class="chip">${escapeHtml(item.sourcecountry || '—')}</span>
++        </div>
++
++        <div>
++          <h2 class="detail-title">${escapeHtml(item.title)}</h2>
++          <p class="detail-summary">${escapeHtml(item.summary || 'No summary available.')}</p>
++          <div class="inline">
++            <a href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer">Open original coverage ↗</a>
++            <span class="tiny">Published/seen ${escapeHtml(formatStamp(item.seendate))}</span>
++          </div>
++        </div>
++
++        <div class="summary-grid">
++          <div class="mini-card">
++            <div class="mini-label">Source</div>
++            <div class="mini-value">${escapeHtml(item.domain || 'Unknown')}</div>
++          </div>
++          <div class="mini-card">
++            <div class="mini-label">Urgency score</div>
++            <div class="mini-value">${item.score}</div>
++          </div>
++          <div class="mini-card">
++            <div class="mini-label">Seen time</div>
++            <div class="mini-value">${escapeHtml(formatAge(item.seendate))}</div>
++          </div>
++        </div>
++
++        <div>
++          <div class="mini-label" style="margin-bottom:10px">Signal extraction</div>
++          <div class="timeline">
++            <div class="source-row">
++              <div class="source-name">Matched high-risk terms</div>
++              <div class="source-count">${matchedHigh.length ? escapeHtml(matchedHigh.join(', ')) : 'None detected'}</div>
++            </div>
++            <div class="source-row">
++              <div class="source-name">Matched watch terms</div>
++              <div class="source-count">${matchedWatch.length ? escapeHtml(matchedWatch.join(', ')) : 'None detected'}</div>
++            </div>
++            <div class="source-row">
++              <div class="source-name">Link</div>
++              <div class="source-count"><a href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.url)}</a></div>
++            </div>
++          </div>
++        </div>
++      `;
++    }
++
++    function renderSidePanels() {
++      const sources = groupSources(state.filtered);
++      els.sourceList.innerHTML = sources.length ? sources.map(([name, count]) => `
++        <li class="source-row">
++          <div class="source-name">${escapeHtml(name)}</div>
++          <div class="source-count">${count} live item${count > 1 ? 's' : ''}</div>
++        </li>
++      `).join('') : `<li class="source-row"><div class="source-count">No source data yet.</div></li>`;
++
++      els.headlineList.innerHTML = state.filtered.slice(0, 6).map(item => `
++        <li>
++          <div class="source-name">${escapeHtml(item.title)}</div>
++          <div class="source-count">${escapeHtml(item.domain || 'Unknown')} · ${escapeHtml(formatAge(item.seendate))} · score ${item.score}</div>
++        </li>
++      `).join('');
++
++      const intensity = intensityFromItems(state.filtered);
++      els.intensityLabel.textContent = intensity.label;
++      els.statusFill.style.width = `${intensity.pct}%`;
++      els.signalLevel.textContent = intensity.label;
++      els.sourceCount.textContent = String(new Set(state.filtered.map(i => i.domain)).size);
++    }
++
++    function renderMeta() {
++      els.storiesTracked.textContent = String(state.filtered.length);
++      els.resultsMeta.textContent = state.filtered.length
++        ? `${state.filtered.length} results in view · ${els.windowSelect.options[els.windowSelect.selectedIndex].text}`
++        : 'No results in view';
++    }
++
++    function renderAll() {
++      applyFiltersAndSort();
++      renderFeed();
++      renderDetail();
++      renderSidePanels();
++      renderMeta();
++    }
++
++    async function refreshData() {
++      els.refreshState.textContent = 'Refreshing';
++      els.refreshBtn.disabled = true;
++      try {
++        const query = els.searchInput.value.trim() || 'Lebanon OR Beirut OR Hezbollah OR Israel Lebanon border';
++        const hours = windowModeToHours(els.windowSelect.value);
++        const items = await fetchGdelt(query, hours);
++        const deduped = dedupeItems(items).map(item => ({ ...item, score: scoreStory(item) }));
++        state.items = deduped;
++        state.selectedId = deduped[0]?.id || null;
++        els.lastSync.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
++        renderAll();
++        els.refreshState.textContent = 'Live';
++      } catch (error) {
++        console.error(error);
++        els.refreshState.textContent = 'Error';
++        els.feedList.innerHTML = `
++          <div class="empty">
++            <h3>Feed fetch failed</h3>
++            <p>${escapeHtml(error.message)}</p>
++            <p class="tiny">If this page is opened locally and the browser blocks a feed, run it from a small local server or add a backend proxy for extra sources.</p>
++          </div>
++        `;
++      } finally {
++        els.refreshBtn.disabled = false;
++      }
++    }
++
++    function scheduleAutoRefresh() {
++      clearInterval(state.timer);
++      if (!state.autoRefresh) return;
++      state.timer = setInterval(refreshData, state.refreshEveryMs);
++    }
++
++    function bindEvents() {
++      els.refreshBtn.addEventListener('click', refreshData);
++      els.toggleAutoBtn.addEventListener('click', () => {
++        state.autoRefresh = !state.autoRefresh;
++        els.toggleAutoBtn.textContent = state.autoRefresh ? 'Pause auto' : 'Resume auto';
++        scheduleAutoRefresh();
++      });
++      els.windowSelect.addEventListener('change', refreshData);
++      els.sortSelect.addEventListener('change', renderAll);
++      els.searchInput.addEventListener('keydown', (e) => {
++        if (e.key === 'Enter') refreshData();
++      });
++      els.searchInput.addEventListener('input', () => {
++        applyFiltersAndSort();
++        renderFeed();
++        renderDetail();
++        renderSidePanels();
++        renderMeta();
++      });
++    }
++
++    bindEvents();
++    scheduleAutoRefresh();
++    refreshData();
++  </script>
++</body>
++</html>
+ 
+EOF
+)
